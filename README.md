@@ -39,7 +39,32 @@ CEOS 14기 백엔드 스터디 모델링 및 drf 연습을 위한 레포
 
 #### nginx
 웹 서버 소프트웨어, 가볍고 동시 접속에 특화되어 있음
+정적 데이터 처리 많은 서비스에 적합
+* 리버스 프록시 : 서버와 클라이언트 중계, 보안 강화
+* 로드밸런싱 : 부하 분산, 무중단 배포 가능
 
 #### .env
 환경에 대한 env 파일 별도 작성<br>
 RDS, EC2, 장고 관련 정보 
+
+### Github Action
+
+#### Github Action
+Github 저장소를 바탕으로 개발 workflow를 자동화하는 도구   
+Github에서 바로 등록하거나 .github/workflows 폴더 내에 .yml 파일 추가하여 등록
+
+#### Workflow
+자동화 된 전체 프로세스   
+하나 이상의 job으로 구성, 이벤트에 의해 실행
+
+#### Event
+워크플로우를 실행하는 활동이나 규칙   
+push, pull request 등
+
+#### Job
+워크플로우의 기본 단위
+
+#### deploy.yml
+1. github actions는 deploy.yml 파일로부터 deploy.sh 파일을 만들어 실행
+2. 만들어진 deploy.sh가 docker-compose 실행
+3. docker-compose가 컨테이너 빌드하여 실행
