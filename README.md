@@ -38,7 +38,7 @@ CEOS 14기 백엔드 스터디 모델링 및 drf 연습을 위한 레포
 * ```docker-compose -f docker-compose.yml up --build``` docker-compose.yml 대신 다른 파일 실행할 때에는 옵션 ```-f``` 사용해야 함
 
 #### nginx
-웹 서버 소프트웨어, 가볍고 동시 접속에 특화되어 있음<br>
+웹 서버 소프트웨어, 가볍고 동시 접속에 특화되어 있음
 정적 데이터 처리 많은 서비스에 적합
 * 리버스 프록시 : 서버와 클라이언트 중계, 보안 강화
 * 로드밸런싱 : 부하 분산, 무중단 배포 가능
@@ -69,7 +69,3 @@ push, pull request 등
 2. 만들어진 deploy.sh가 docker-compose 실행
 3. docker-compose가 컨테이너 빌드하여 실행
 
-### 3주차 <hr>
-환경 변수 설정 안하면 mysql 명령어 에러남   
-시스템 속성 > 환경 변수 > 시스템 변수 > Path  
-```C:\Program Files\MySQL\MySQL Server 8.0\bin``` 추가
