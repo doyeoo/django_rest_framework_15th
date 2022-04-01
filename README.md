@@ -143,3 +143,18 @@ push, pull request 등
 
 3. filter 함수 사용해보기     
 ![post filter](https://user-images.githubusercontent.com/81256252/161230522-8e201d53-ef61-4dcc-920b-d14504a88a67.PNG)
+
+<br>
+
+#### 회고
+기존에 설치되어있던 MariaDB와 충돌하여서인지 MySQL 초기 세팅을 하는데 시간이 걸렸다.      
+MariaDB를 삭제하고 MySQL을 새로 설치하였고 MySQL 파일 위치를 환경 변수에 추가하여 mysql 관련 명령어가 실행되지 않던 오류를 해결하였다.    
+
+ERD 모델링을 먼저 하고 models.py 코드를 작성하였는데 그 과정에서 초기에 생각했던 모델에 문제가 있다는 것을 발견하였다.   
+덕분에 모델 Relation 관련 개념을 다시 한 번 정리하고 공부할 수 있었다.
+
+팔로우 관련 기능을 구현할 때 N:M 관계를 이용하였는데 해당 기능을 Profile 모델에 넣었더니 Profile 모델에 너무 많은 필드가 들어가게 되었다.
+팔로우 관련 기능은 별도로 관리할 수 있게 following과 follower 필드는 따로 빼 모델을 수정할 예정이다.
+
+
+
