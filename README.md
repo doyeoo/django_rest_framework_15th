@@ -69,3 +69,72 @@ push, pull request 등
 2. 만들어진 deploy.sh가 docker-compose 실행
 3. docker-compose가 컨테이너 빌드하여 실행
 
+<br>
+
+### 3주차 <hr>
+
+#### MySQL 설치
+환경 변수 설정 안하면 mysql 명령어 에러남   
+시스템 속성 > 환경 변수 > 시스템 변수 > Path  
+```C:\Program Files\MySQL\MySQL Server 8.0\bin``` 추가
+
+<br>
+
+#### 인스타그램 데이터 모델링
+
+#### User
+장고에서 기본으로 제공하는 유저 모델
+* 사용자 이름, 비밀번호, 이름, 성, 이메일 주소 필드
+
+#### Profile
+장고 기본 User Model OneToOne 확장   
+* 전화번호 
+* 프로필 사진
+* 웹사이트
+* 소개
+* 팔로워, 팔로잉
+  * Profile 모델(self)과 N:M 관계
+  * 팔로워, 팔로잉 0인 경우 존재하기 때문에 null=True, blank=True
+  ```    follower=models.ManyToManyField('self',null=True, blank=True)```   
+    ```following=models.ManyToManyField('self',null=True, blank=True)```
+
+#### Post
+게시글 모델   
+사진이나 영상 파일은 1:N으로 연결하기 위해 별도 모델로 관리
+* 유저 아이디 Foreign Key로 사용 1(유저):N(게시글) 
+* 내용
+* 업로드 시간
+* 댓글
+  * 댓글 수만 카운트, 댓글 상세 내용은 Comment 모델에서 관리
+* 좋아요
+  * 좋아요 수만 카운트, 좋아요 상세 내용은 Like 모델에서 관리
+
+#### File
+글과 함께 올라가는 사진 및 영상 파일 모델    
+게시글과 1(글):N(파일)
+* 포스트 아이디 Foreign Key로 사용 1(글):N(파일)
+* 해당 글에 업로드할 파일
+
+#### Comment
+글에 달린 댓글 관련 상세 내용 관리   
+게시글과 1:N 관계
+* 포스트 아이디 Foreign Key로 사용 1(글):N(댓글)
+* 유저 아이디 Foreign Key로 사용 1(댓글 작성한 유저):N(댓글)
+* 업로드 시간
+* 댓글 내용
+
+#### Like
+글에 달린 좋아요 관련 상세 내용 관리   
+게시글과 1:N 관계
+* 포스트 아이디 Foreign Key로 사용 1(글):N(댓글)
+* 유저 아이디 Foreign Key로 사용 1(좋아요 한 유저):N(댓글)
+* 업로드 시간
+
+<br>
+
+#### ORM 적용해보기
+1. 데이터베이스에 객체 넣기
+
+2. 삽입한 객체 조회하기
+
+3. filter 함수 사용해보기
