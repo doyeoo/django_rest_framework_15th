@@ -82,6 +82,8 @@ push, pull request 등
 
 #### 인스타그램 데이터 모델링
 
+![다운로드](https://user-images.githubusercontent.com/81256252/161230387-f2a8c3bd-4715-4dea-85ca-4b5034a5fe9b.png)
+
 #### User
 장고에서 기본으로 제공하는 유저 모델
 * 사용자 이름, 비밀번호, 이름, 성, 이메일 주소 필드
@@ -133,8 +135,11 @@ push, pull request 등
 <br>
 
 #### ORM 적용해보기
-1. 데이터베이스에 객체 넣기
+1. 데이터베이스에 객체 넣기      
+![post create+all](https://user-images.githubusercontent.com/81256252/161230476-c8351705-7f1d-4902-b842-f051b9955735.PNG)
 
-2. 삽입한 객체 조회하기
+2. 삽입한 객체 조회하기    
+![post get](https://user-images.githubusercontent.com/81256252/161230495-a151b3a8-b51c-432f-9f26-4d6840dfc615.PNG)
 
-3. filter 함수 사용해보기
+3. filter 함수 사용해보기     
+![post filter](https://user-images.githubusercontent.com/81256252/161230522-8e201d53-ef61-4dcc-920b-d14504a88a67.PNG)
