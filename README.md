@@ -88,24 +88,25 @@ push, pull request 등
 장고에서 기본으로 제공하는 유저 모델
 * 사용자 이름, 비밀번호, 이름, 성, 이메일 주소 필드
 
+
 #### Profile
 장고 기본 User Model OneToOne 확장   
-* 전화번호 
-* 프로필 사진
+* 전화번호 _중복 방지하기 위해_ `unique=True` 추가
+* 프로필 사진 _ImageField 대신 url 링크 넣을 수 있는 CharField로 변경_
 * 웹사이트
 * 소개
 * 팔로워, 팔로잉
   * Profile 모델(self)과 N:M 관계
   * 팔로워, 팔로잉 0인 경우 존재하기 때문에 null=True, blank=True
-  ```    follower=models.ManyToManyField('self',null=True, blank=True)```   
-    ```following=models.ManyToManyField('self',null=True, blank=True)```
+  ```    follower=models.ManyToManyField('self', blank=True)```   
+    ```following=models.ManyToManyField('self', blank=True)```
 
 #### Post
 게시글 모델   
 사진이나 영상 파일은 1:N으로 연결하기 위해 별도 모델로 관리
 * 유저 아이디 Foreign Key로 사용 1(유저):N(게시글) 
 * 내용
-* 업로드 시간
+* ~~업로드 시간~~
 * 댓글
   * 댓글 수만 카운트, 댓글 상세 내용은 Comment 모델에서 관리
 * 좋아요
@@ -115,14 +116,14 @@ push, pull request 등
 글과 함께 올라가는 사진 및 영상 파일 모델    
 게시글과 1(글):N(파일)
 * 포스트 아이디 Foreign Key로 사용 1(글):N(파일)
-* 해당 글에 업로드할 파일
+* 해당 글에 업로드할 파일 _FileField 대신 url 링크 넣을 수 있는 CharField로 변경_
 
 #### Comment
 글에 달린 댓글 관련 상세 내용 관리   
 게시글과 1:N 관계
 * 포스트 아이디 Foreign Key로 사용 1(글):N(댓글)
 * 유저 아이디 Foreign Key로 사용 1(댓글 작성한 유저):N(댓글)
-* 업로드 시간
+* ~~업로드 시간~~
 * 댓글 내용
 
 #### Like
@@ -130,7 +131,14 @@ push, pull request 등
 게시글과 1:N 관계
 * 포스트 아이디 Foreign Key로 사용 1(글):N(댓글)
 * 유저 아이디 Foreign Key로 사용 1(좋아요 한 유저):N(댓글)
-* 업로드 시간
+* ~~업로드 시간~~
+
+
+#### + Base Model
+다른 모델이 상속받아 사용할 수 있도록 created_at, updated_at 필드 따로 작성한 모델   
+`class Meta: abstract = True`
+* 최초 업로드 시간 `auto_now_add=True`
+* 수정 시간 `auto_now=True`
 
 <br>
 
