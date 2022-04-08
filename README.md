@@ -1,6 +1,6 @@
 CEOS 14기 백엔드 스터디 모델링 및 drf 연습을 위한 레포
 
-### 2주차 <hr>
+## 2주차 <hr>
 
 ### 도커
 
@@ -71,7 +71,7 @@ push, pull request 등
 
 <br>
 
-### 3주차 <hr>
+## 3주차 <hr>
 
 #### MySQL 설치
 환경 변수 설정 안하면 mysql 명령어 에러남   
@@ -80,7 +80,7 @@ push, pull request 등
 
 <br>
 
-#### 인스타그램 데이터 모델링
+### 인스타그램 데이터 모델링
 
 ![다운로드](https://user-images.githubusercontent.com/81256252/161230387-f2a8c3bd-4715-4dea-85ca-4b5034a5fe9b.png)
 
@@ -91,13 +91,13 @@ push, pull request 등
 
 #### Profile
 장고 기본 User Model OneToOne 확장   
-* 전화번호 _중복 방지하기 위해_ `unique=True` 추가
+* 전화번호 _중복 방지하기 위해 `unique=True` 추가_
 * 프로필 사진 _ImageField 대신 url 링크 넣을 수 있는 CharField로 변경_
 * 웹사이트
 * 소개
 * 팔로워, 팔로잉
   * Profile 모델(self)과 N:M 관계
-  * 팔로워, 팔로잉 0인 경우 존재하기 때문에 null=True, blank=True
+  * 팔로워, 팔로잉 0인 경우 존재하기 때문에 blank=True   
   ```    follower=models.ManyToManyField('self', blank=True)```   
     ```following=models.ManyToManyField('self', blank=True)```
 
@@ -164,4 +164,6 @@ ERD 모델링을 먼저 하고 models.py 코드를 작성하였는데 그 과정
 팔로우 관련 기능을 구현할 때 N:M 관계를 이용하였는데 해당 기능을 Profile 모델에 넣었더니 Profile 모델에 너무 많은 필드가 들어가게 되었다.
 팔로우 관련 기능은 별도로 관리할 수 있게 following과 follower 필드는 따로 빼 모델을 수정할 예정이다.
 
+<br>
 
+## 4주차 <hr>
