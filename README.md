@@ -164,13 +164,141 @@ ERD 모델링을 먼저 하고 models.py 코드를 작성하였는데 그 과정
 팔로우 관련 기능을 구현할 때 N:M 관계를 이용하였는데 해당 기능을 Profile 모델에 넣었더니 Profile 모델에 너무 많은 필드가 들어가게 되었다.
 팔로우 관련 기능은 별도로 관리할 수 있게 following과 follower 필드는 따로 빼 모델을 수정할 예정이다.
 
+<br>## 4주차 <hr/>
+#### 데이터 삽입
+Post 모델  
+```
+class Post(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    like_count = models.PositiveIntegerField(default=0)
+    comment_count = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.content[:50]
+
+class Like(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='like', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.post.content[:50]+" / "+self.user.username
+
+class Comment(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='comment', on_delete=models.CASCADE)
+    content = models.TextField()
+
+    def __str__(self):
+        return self.post.content[:50]+" / "+self.user.username
+```
+데이터 삽입 결과    
+![image](https://user-images.githubusercontent.com/81256252/162493664-ff7b9505-a489-4eb7-b638-edf7d8541e02.png)
+
+<br>
+        
+#### 모든 데이터 가져오는 API
+* URL : api/post/
+* Method : GET
+```
+[
+    {
+        "id": 1,
+        "comment": [
+            {
+                "id": 1,
+                "created_at": "2022-04-04T00:37:19.719049+09:00",
+                "updated_at": "2022-04-04T00:52:54.935482+09:00",
+                "content": "hihi",
+                "user": 3,
+                "post": 1
+            }
+        ],
+        "like": [
+            {
+                "id": 1,
+                "created_at": "2022-04-04T00:37:07.577675+09:00",
+                "updated_at": "2022-04-04T00:37:07.577675+09:00",
+                "user": 1,
+                "post": 1
+            }
+        ],
+        "file": [
+            {
+                "id": 1,
+                "url": "asdasd",
+                "post": 1
+            }
+        ],
+        "created_at": "2022-04-04T00:35:09.855194+09:00",
+        "updated_at": "2022-04-09T02:37:37.044732+09:00",
+        "content": "Ut hendrerit arcu facilisis erat molestie, et egestas sem blandit. Ut mattis ligula sed nulla efficitur ullamcorper. Sed tellus sem, consectetur ac laoreet vitae, aliquet vel metus. Quisque sed turpis malesuada, sodales ex ut, semper tellus. Aenean dapibus nec neque id dapibus. Aenean hendrerit lorem eu volutpat efficitur. Sed pulvinar finibus lorem, ac pharetra metus finibus vel. Cras sit amet arcu luctus, feugiat nibh a, blandit mi. Pellentesque rutrum mi molestie, pellentesque felis ut, rutrum metus. Phasellus fringilla dignissim nisl, sed molestie orci vehicula vitae. Nulla facilisi. Aenean sed maximus massa. Mauris vel pellentesque nulla. Curabitur ut posuere purus. Maecenas elementum est ex.",
+        "like_count": 2,
+        "comment_count": 2,
+        "user": 1
+    },
+    {
+        "id": 2,
+        "comment": [
+            {
+                "id": 2,
+                "created_at": "2022-04-04T00:46:32.936881+09:00",
+                "updated_at": "2022-04-04T00:46:32.936881+09:00",
+                "content": "asd",
+                "user": 1,
+                "post": 2
+            },
+            {
+                "id": 3,
+                "created_at": "2022-04-04T00:52:43.022380+09:00",
+                "updated_at": "2022-04-04T00:52:43.022380+09:00",
+                "content": "abc",
+                "user": 2,
+                "post": 2
+            }
+        ],
+        "like": [
+            {
+                "id": 2,
+                "created_at": "2022-04-04T00:52:26.776129+09:00",
+                "updated_at": "2022-04-04T00:52:26.776129+09:00",
+                "user": 2,
+                "post": 2
+            }
+        ],
+        "file": [],
+        "created_at": "2022-04-04T00:46:20.295188+09:00",
+        "updated_at": "2022-04-04T00:51:05.388888+09:00",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pellentesque lorem sed lorem posuere tincidunt. Sed finibus metus sed ante eleifend consectetur. Curabitur interdum nisl eu urna semper ornare. Curabitur varius sodales aliquet. Aliquam a elementum magna. Nam commodo auctor fermentum. In semper gravida est, ut condimentum risus consequat nec. Proin dapibus pellentesque rutrum. Morbi tincidunt nulla in porta convallis.",
+        "like_count": 0,
+        "comment_count": 0,
+        "user": 2
+    },
+    {
+        "id": 3,
+        "comment": [],
+        "like": [],
+        "file": [],
+        "created_at": "2022-04-04T00:48:42.437394+09:00",
+        "updated_at": "2022-04-09T02:38:15.035626+09:00",
+        "content": "Nulla iaculis auctor pretium. Phasellus nec nisl ut diam sodales viverra et sed sem. Pellentesque vestibulum euismod ligula, nec pretium sem ultricies sodales. Nulla id quam interdum, dapibus ex ut, feugiat est. Vestibulum congue condimentum ligula, sed ultricies est rutrum at. Phasellus vulputate magna a dolor tincidunt, vel tempus quam accumsan. Etiam dignissim ut purus scelerisque ultrices. Nullam viverra vulputate dui, a commodo nisi tempor condimentum. Nulla facilisi. Vivamus consectetur magna egestas mauris volutpat, vitae vestibulum tellus accumsan. Morbi eu purus tempor, vehicula mi tempor, feugiat mauris.",
+        "like_count": 1,
+        "comment_count": 1,
+        "user": 3
+    }
+]
+```
+
 <br>
 
-## 4주차 <hr>
-#### 데이터 삽입
-
-#### 모든 데이터 가져오는 API
-
 #### 새로운 데이터 생성하는 API
+* URL : api/post/
+* Method : POST   
+* Body : ```{ "id":6, "content":"post", "user":3 }```  
+
+![image](https://user-images.githubusercontent.com/81256252/162494842-e6b14197-79b2-4660-bdd5-bd8b482545e0.png)   
+
+![image](https://user-images.githubusercontent.com/81256252/162494896-1103aaea-6451-4fdb-b8d7-b4a95c23e980.png)
+
 
 #### 회고
