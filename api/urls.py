@@ -7,5 +7,5 @@ router.register('post', PostView)
 router.register('profile', ProfileView)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
 ]
