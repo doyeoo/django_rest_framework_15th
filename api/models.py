@@ -32,21 +32,21 @@ class Post(BaseModel):
 
 class Like(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='like', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.post.content[:50]+" / "+self.user.username
 
 class Comment(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='comment', on_delete=models.CASCADE)
     content = models.TextField()
 
     def __str__(self):
         return self.post.content[:50]+" / "+self.user.username
 
 class File(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='file', on_delete=models.CASCADE)
     url = models.CharField(max_length=500)
 
     def __str__(self):

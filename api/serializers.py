@@ -11,9 +11,15 @@ class LikeSerializer(serializers.ModelSerializer):
         model = Like
         fields = '__all__'
 
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = '__all__'
+
 class PostSerializer(serializers.ModelSerializer):
     comment=CommentSerializer(many=True, read_only=True)
     like=LikeSerializer(many=True, read_only=True)
+    file=FileSerializer(many=True, read_only=True)
     class Meta:
         model = Post
         fields = '__all__'
