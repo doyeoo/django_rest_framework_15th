@@ -3,8 +3,8 @@ from .views import *
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('post', PostView)
-router.register('profile', ProfileView)
+router.register('posts', PostView)
+router.register('profiles', ProfileView)
 
 urlpatterns = [
     path('api/', include(router.urls)),
