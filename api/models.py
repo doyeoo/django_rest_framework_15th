@@ -35,7 +35,7 @@ class Like(BaseModel):
     post = models.ForeignKey(Post, related_name='like', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.post.content[:50]+" / "+self.user.username
+        return self.post.content[:50]
 
 class Comment(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -43,7 +43,7 @@ class Comment(BaseModel):
     content = models.TextField()
 
     def __str__(self):
-        return self.post.content[:50]+" / "+self.user.username
+        return self.post.content[:50]
 
 class File(models.Model):
     post = models.ForeignKey(Post, related_name='file', on_delete=models.CASCADE)
