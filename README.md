@@ -310,3 +310,238 @@ class Comment(BaseModel):
 4주차 과제 중 모든 데이터를 가져오는 API가 외래키로 연결된 모델의 내용을 제대로 가지고 오지 못하는 문제가 발생하였다. 모델에 ```'related_name'```을 추가하지 않아 발생한 문제임을 알게되었고 가져와야 하는 내용을 담고있는 모델 필드에 ```related_name```을 설정해 해결할 수 있었다. 
 
 view의 경우 이전에 ViewSet을 사용하였을 때 코드를 간결하게 작성했던 기억이 있어 viewset을 가져와 사용하였고 url은 라우터를 이용하여 연결해주었다.
+
+
+## 5주차 <hr>
+
+### 모든 list를 가져오는 API
+* URL : api/posts/
+* Method : GET
+```
+[
+    {
+        "id": 1,
+        "comment": [
+            {
+                "id": 1,
+                "created_at": "2022-04-04T00:37:19.719049+09:00",
+                "updated_at": "2022-04-04T00:52:54.935482+09:00",
+                "content": "hihi",
+                "user": 3,
+                "post": 1
+            }
+        ],
+        "like": [
+            {
+                "id": 1,
+                "created_at": "2022-04-04T00:37:07.577675+09:00",
+                "updated_at": "2022-04-04T00:37:07.577675+09:00",
+                "user": 1,
+                "post": 1
+            }
+        ],
+        "file": [
+            {
+                "id": 1,
+                "url": "asdasd",
+                "post": 1
+            }
+        ],
+        "created_at": "2022-04-04T00:35:09.855194+09:00",
+        "updated_at": "2022-04-09T02:37:37.044732+09:00",
+        "content": "Ut hendrerit arcu facilisis erat molestie, et egestas sem blandit. Ut mattis ligula sed nulla efficitur ullamcorper. Sed tellus sem, consectetur ac laoreet vitae, aliquet vel metus. Quisque sed turpis malesuada, sodales ex ut, semper tellus. Aenean dapibus nec neque id dapibus. Aenean hendrerit lorem eu volutpat efficitur. Sed pulvinar finibus lorem, ac pharetra metus finibus vel. Cras sit amet arcu luctus, feugiat nibh a, blandit mi. Pellentesque rutrum mi molestie, pellentesque felis ut, rutrum metus. Phasellus fringilla dignissim nisl, sed molestie orci vehicula vitae. Nulla facilisi. Aenean sed maximus massa. Mauris vel pellentesque nulla. Curabitur ut posuere purus. Maecenas elementum est ex.",
+        "like_count": 2,
+        "comment_count": 2,
+        "user": 1
+    },
+    {
+        "id": 2,
+        "comment": [
+            {
+                "id": 2,
+                "created_at": "2022-04-04T00:46:32.936881+09:00",
+                "updated_at": "2022-04-04T00:46:32.936881+09:00",
+                "content": "asd",
+                "user": 1,
+                "post": 2
+            },
+            {
+                "id": 3,
+                "created_at": "2022-04-04T00:52:43.022380+09:00",
+                "updated_at": "2022-04-04T00:52:43.022380+09:00",
+                "content": "abc",
+                "user": 2,
+                "post": 2
+            }
+        ],
+        "like": [
+            {
+                "id": 2,
+                "created_at": "2022-04-04T00:52:26.776129+09:00",
+                "updated_at": "2022-04-04T00:52:26.776129+09:00",
+                "user": 2,
+                "post": 2
+            }
+        ],
+        "file": [],
+        "created_at": "2022-04-04T00:46:20.295188+09:00",
+        "updated_at": "2022-04-04T00:51:05.388888+09:00",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pellentesque lorem sed lorem posuere tincidunt. Sed finibus metus sed ante eleifend consectetur. Curabitur interdum nisl eu urna semper ornare. Curabitur varius sodales aliquet. Aliquam a elementum magna. Nam commodo auctor fermentum. In semper gravida est, ut condimentum risus consequat nec. Proin dapibus pellentesque rutrum. Morbi tincidunt nulla in porta convallis.",
+        "like_count": 0,
+        "comment_count": 0,
+        "user": 2
+    },
+    {
+        "id": 3,
+        "comment": [],
+        "like": [],
+        "file": [],
+        "created_at": "2022-04-04T00:48:42.437394+09:00",
+        "updated_at": "2022-04-09T02:38:15.035626+09:00",
+        "content": "Nulla iaculis auctor pretium. Phasellus nec nisl ut diam sodales viverra et sed sem. Pellentesque vestibulum euismod ligula, nec pretium sem ultricies sodales. Nulla id quam interdum, dapibus ex ut, feugiat est. Vestibulum congue condimentum ligula, sed ultricies est rutrum at. Phasellus vulputate magna a dolor tincidunt, vel tempus quam accumsan. Etiam dignissim ut purus scelerisque ultrices. Nullam viverra vulputate dui, a commodo nisi tempor condimentum. Nulla facilisi. Vivamus consectetur magna egestas mauris volutpat, vitae vestibulum tellus accumsan. Morbi eu purus tempor, vehicula mi tempor, feugiat mauris.",
+        "like_count": 1,
+        "comment_count": 1,
+        "user": 3
+    },
+    {
+        "id": 4,
+        "comment": [],
+        "like": [],
+        "file": [],
+        "created_at": "2022-04-08T20:04:52.259136+09:00",
+        "updated_at": "2022-04-09T02:37:49.522306+09:00",
+        "content": "new post",
+        "like_count": 4,
+        "comment_count": 2,
+        "user": 2
+    },
+    {
+        "id": 5,
+        "comment": [],
+        "like": [],
+        "file": [],
+        "created_at": "2022-04-09T02:20:22.027060+09:00",
+        "updated_at": "2022-04-09T02:38:04.400624+09:00",
+        "content": "새 글",
+        "like_count": 0,
+        "comment_count": 0,
+        "user": 1
+    },
+    {
+        "id": 6,
+        "comment": [],
+        "like": [],
+        "file": [],
+        "created_at": "2022-04-09T02:48:47.092571+09:00",
+        "updated_at": "2022-04-09T02:48:47.092571+09:00",
+        "content": "post",
+        "like_count": 0,
+        "comment_count": 0,
+        "user": 3
+    }
+]
+```
+
+### 특정 데이터를 가져오는 API
+* URL : api/posts/2/
+* Method : GET
+```
+{
+    "id": 2,
+    "comment": [
+        {
+            "id": 2,
+            "created_at": "2022-04-04T00:46:32.936881+09:00",
+            "updated_at": "2022-04-04T00:46:32.936881+09:00",
+            "content": "asd",
+            "user": 1,
+            "post": 2
+        },
+        {
+            "id": 3,
+            "created_at": "2022-04-04T00:52:43.022380+09:00",
+            "updated_at": "2022-04-04T00:52:43.022380+09:00",
+            "content": "abc",
+            "user": 2,
+            "post": 2
+        }
+    ],
+    "like": [
+        {
+            "id": 2,
+            "created_at": "2022-04-04T00:52:26.776129+09:00",
+            "updated_at": "2022-04-04T00:52:26.776129+09:00",
+            "user": 2,
+            "post": 2
+        }
+    ],
+    "file": [],
+    "created_at": "2022-04-04T00:46:20.295188+09:00",
+    "updated_at": "2022-04-04T00:51:05.388888+09:00",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pellentesque lorem sed lorem posuere tincidunt. Sed finibus metus sed ante eleifend consectetur. Curabitur interdum nisl eu urna semper ornare. Curabitur varius sodales aliquet. Aliquam a elementum magna. Nam commodo auctor fermentum. In semper gravida est, ut condimentum risus consequat nec. Proin dapibus pellentesque rutrum. Morbi tincidunt nulla in porta convallis.",
+    "like_count": 0,
+    "comment_count": 0,
+    "user": 2
+}
+```
+
+### 새로운 데이터를 생성하는 API
+* URL : api/posts/
+* Method : POST
+```
+{
+    "user" : 3,
+    "content" : "새로운 글 추가하기"
+}
+```
+
+```
+{
+    "id": 8,
+    "comment": [],
+    "like": [],
+    "file": [],
+    "created_at": "2022-05-07T02:29:30.093374+09:00",
+    "updated_at": "2022-05-07T02:29:30.093374+09:00",
+    "content": "새로운 글 추가하기",
+    "like_count": 0,
+    "comment_count": 0,
+    "user": 3
+}
+```
+### 특정 데이터를 업데이트하는 API
+* URL : api/posts/5/
+* Method : PUT
+```
+{
+    "user" : 3,
+    "content" : "기존 글 수정하기"
+}
+```
+
+```
+{
+    "id": 5,
+    "comment": [],
+    "like": [],
+    "file": [],
+    "created_at": "2022-04-09T02:20:22.027060+09:00",
+    "updated_at": "2022-05-07T02:30:55.446895+09:00",
+    "content": "기존 글 수정하기",
+    "like_count": 0,
+    "comment_count": 0,
+    "user": 3
+}
+```
+
+### 특정 데이터를 삭제하는 API
+* URL : api/posts/4/
+![데이터 삭제](https://user-images.githubusercontent.com/81256252/167183338-536382fb-7173-47c6-bda5-b7877a9d418e.PNG)
+
+
+### 공부한 내용 정리
+새로 알게된 점, 정리 하고 싶은 개념, 궁금한점 등을 정리해 주세요
+
+### 간단한 회고
+과제 시 어려웠던 점이나 느낀 점, 좋았던 점 등을 간단히 적어주세요!
+
