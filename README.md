@@ -311,6 +311,7 @@ class Comment(BaseModel):
 
 view의 경우 이전에 ViewSet을 사용하였을 때 코드를 간결하게 작성했던 기억이 있어 viewset을 가져와 사용하였고 url은 라우터를 이용하여 연결해주었다.
 
+<br>
 
 ## 5주차 <hr>
 
@@ -536,12 +537,21 @@ view의 경우 이전에 ViewSet을 사용하였을 때 코드를 간결하게 �
 
 ### 특정 데이터를 삭제하는 API
 * URL : api/posts/4/
+* Method : DELETE
+
 ![데이터 삭제](https://user-images.githubusercontent.com/81256252/167183338-536382fb-7173-47c6-bda5-b7877a9d418e.PNG)
 
 
-### 공부한 내용 정리
-새로 알게된 점, 정리 하고 싶은 개념, 궁금한점 등을 정리해 주세요
+### 정리 
+* FBV는 HTTP 메소드 조건문으로 구분
+* CBV는 HTTP 메소드 클래스 내에서 각각 처리 가능
+* CBV 확장 및 재사용 용이하지만 FBV 완전 대체 불가
+* 403, 404, 500 에러 핸들링에는 FBV 사용
+* `serializer.data` 유효성 검사 통과하고 save까지 완료된 애
+  * `serializer.initial_data`는 유효성 검사 전에 접근할 때
+  * `serializer.validated_data`는 유효성 검사 통과한 애한테 접근할 때
 
-### 간단한 회고
-과제 시 어려웠던 점이나 느낀 점, 좋았던 점 등을 간단히 적어주세요!
+
+### 회고
+CBV를 이용해 코드를 작성하니 가독성이 좋다. 클래스 내에 HTTP 메소드에 해당하는 함수를 만들고 이를 호출해서 사용하는 것이 HTTP 메소드를 if 문으로 구분하여 사용하는 것 보다 더 직관적이라는 생각이 들었다. 지난 주에 FBV를 제대로 사용하지 않고 바로 CBV를 사용한 것이 아쉬워 다음 과제 전에 FBV를 사용해보고 CBV와 FBV를 비교해 보아야겠다.  
 
