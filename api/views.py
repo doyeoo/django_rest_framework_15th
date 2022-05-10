@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -20,10 +21,7 @@ class PostList(APIView):
 
 class PostDetail(APIView):
     def get_object(self, pk):
-        try:
-            return Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            raise Http404
+        return get_object_or_404(Post, pk=pk)
 
     def get(self, request, pk, format=None):
         post = self.get_object(pk)
