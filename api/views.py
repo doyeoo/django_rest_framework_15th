@@ -8,15 +8,17 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 class PostPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method == 'GET':
+        return request.method in permissions.SAFE_METHODS
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
             return True
-        else:
-            return request.user and request.user.is_authenticated
+        return obj.user == request.user
 
 
 class ProfilePermission(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user and request.user.is_authenticated
 
 
 class PostFilter(FilterSet):
