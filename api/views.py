@@ -6,11 +6,17 @@ from django_filters.rest_framework import FilterSet, filters
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-class ProfileUpdatePermission(permissions.BasePermission):
+class PostPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        id = request.GET['id']
-        blocked = Profile.objects.filter(id=id).exists()
-        return not blocked
+        if request.method == 'GET':
+            return True
+        else:
+            return request.user and request.user.is_authenticated
+
+
+class ProfilePermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated
 
 
 class PostFilter(FilterSet):
@@ -40,6 +46,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_class = PostFilter
+    permission_classes = (PostPermission,)
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -47,4 +54,5 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_class = ProfileFilter
+    permission_classes = (ProfilePermission,)
 
