@@ -555,3 +555,125 @@ view의 경우 이전에 ViewSet을 사용하였을 때 코드를 간결하게 �
 ### 회고
 CBV를 이용해 코드를 작성하니 가독성이 좋다. 클래스 내에 HTTP 메소드에 해당하는 함수를 만들고 이를 호출해서 사용하는 것이 HTTP 메소드를 if 문으로 구분하여 사용하는 것 보다 더 직관적이라는 생각이 들었다. 지난 주에 FBV를 제대로 사용하지 않고 바로 CBV를 사용한 것이 아쉬워 다음 과제 전에 FBV를 사용해보고 CBV와 FBV를 비교해 보아야겠다.  
 
+
+<br>
+
+## 6주차 <hr>
+
+### FBV
+```
+def post_list(request):
+    if request.method == 'GET':
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = PostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+```
+viewset 리팩토링에 앞서 기존에 작성한 클래스 기반 뷰를 함수 기반 뷰로 리팩토링
+
+### Viewset 리팩토링
+views.py
+```
+class PostViewSet(viewsets.ModelViewSet):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    
+class ProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+```
+urls.py
+```
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register('posts', PostViewSet)
+router.register('profiles', ProfileViewSet)
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
+```
+
+### Filter
+```
+class PostFilter(FilterSet):
+    user = filters.NumberFilter(field_name='user')
+    like_count = filters.NumberFilter(field_name='like_count', lookup_expr='gt')
+
+    class Meta:
+        model = Post
+        fields = ['user', 'like_count']
+```
+* 특정 유저가 작성한 포스트 필터링
+* 좋아요 수 기준으로 포스트 필터링
+```
+class ProfileFilter(FilterSet):
+    username = filters.CharFilter(field_name='user__username', lookup_expr='contains')
+    image = filters.BooleanFilter(field_name='image_url', method='filter_image')
+
+    class Meta:
+        model = Profile
+        fields = ['username', 'image']
+
+    def filter_image(self, queryset, name, value):
+        if value:
+            filtered_queryset = queryset.exclude(image_url__exact='')
+        else:
+            filtered_queryset = queryset.filter(image_url__exact='')
+        return filtered_queryset
+```
+* 유저 네임 필터링
+* 프로필 사진 유무 필터링
+
+### Permission
+```
+class PostPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.method in permissions.SAFE_METHODS
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.user == request.user
+```
+* SAFE_METHODS (GET, OPTIONS, HEAD) : 누구나 접근 가능
+* 이외 : 해당 포스트 작성자만 접근 가능
+
+### Validation
+```
+def validate_phone(self, value):
+        for char in value:
+            if not char.isdigit():
+                raise ValidationError("잘못된 형식입니다.")
+        return value
+```
+* phone 필드에 숫자 이외의 문자 입력하면 에러
+
+### 정리
+* 필터 관련 문서 https://django-filter.readthedocs.io/en/stable/ref/filters.html
+* permission
+  * has_permission : 해당 요청 들어오면 항상 실행 
+  * has_object_permission : 특정 유저와 대상 모두 확인하여 실행 
+  * has_permission 실행 후 권한 확인되면 has_object_permission 실행
+* validation
+  * field level validation : 특정 필드 하나만 검사
+  * object level validation : 필드 여러개 대상으로 검사 가능
+
+
+### 회고
+그동안 작성한 코드를 왕창 갈아엎었다. 처음 모델을 만들 때 공백 입력을 허용할 필드에는 null=True, blank=True를 모두 넣어주었다.
+그렇게 조건을 넣어주니 공백이 null과 blank 두 가지로 저장되는 문제가 발생하였다. null=True는 제거하고 blank=True만 남겨 해결하였다.
+또 프로필 시리얼라이저는 __all__로 모든 필드를 다 가져왔는데 자세히 보니 User 필드의 속성은 가져오지 못하고 있다는 것을 알았다.
+프로필 시리얼라이저에 유저 이름을 가져오는 함수를 만들어 추가하였고, 프로필의 id 필드는 user 필드로 대체 가능하므로 id 필드는 가져오지 않는 것으로 수정하였다.
+  
+장고에서 제공하는 FilterSet에 다양한 기능이 내재되어 있어 비교적 편하게 필터 관련 기능을 구현할 수 있었다. 다만 포스트 permission은 제대로 작동하는데 
+프로필 permission은 제대로 작동하지 않는 문제가 발생해 일단 해당 부분 주석 처리하였다. 프로필은 모든 메소드에 대해 해당 유저만 접근할 수 있도록 함수를 작성하였는데
+확인해보니 다른 메소드들은 모두 다른 유저의 접근이 안되는데 DELETE 메소드는 해당 유저가 아니어도 접근 가능하다. ㅜㅜ 수정 필요
