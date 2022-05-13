@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import *
 
 
@@ -31,11 +32,18 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+
     def get_username(self, obj):
         return obj.user.username
 
-    username = serializers.SerializerMethodField("get_username")
+    def validate_phone(self, value):
+        for char in value:
+            if not char.isdigit():
+                raise ValidationError("잘못된 형식입니다.")
+        return value
 
     class Meta:
         model = Profile
-        fields = ('id', 'username', 'phone', 'image_url', 'website', 'bio', 'follower', 'following')
+        fields = ('user', 'username', 'phone', 'image_url', 'website', 'bio', 'follower', 'following')
+
