@@ -11,9 +11,9 @@ class BaseModel(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=20, unique=True)
-    image_url = models.CharField(max_length=500, null=True, blank=True)
-    website = models.TextField(null=True, blank=True)
-    bio = models.TextField(null=True, blank=True)
+    image_url = models.CharField(max_length=500, blank=True)
+    website = models.TextField(blank=True)
+    bio = models.TextField(blank=True)
     follower = models.ManyToManyField('self', blank=True)
     following = models.ManyToManyField('self', blank=True)
 

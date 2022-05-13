@@ -16,9 +16,9 @@ class PostPermission(permissions.BasePermission):
         return obj.user == request.user
 
 
-class ProfilePermission(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return obj.user == request.user and request.user.is_authenticated
+# class ProfilePermission(permissions.BasePermission):
+#     def has_object_permission(self, request, view, obj):
+#         return obj.user == request.user
 
 
 class PostFilter(FilterSet):
@@ -31,15 +31,18 @@ class PostFilter(FilterSet):
 
 
 class ProfileFilter(FilterSet):
-    username = filters.CharFilter(field_name='username', method='filter_username')
-    image = filters.BooleanFilter(field_name='image_url', lookup_expr='isnull')
+    username = filters.CharFilter(field_name='user__username', lookup_expr='contains')
+    image = filters.BooleanFilter(field_name='image_url', method='filter_image')
 
     class Meta:
         model = Profile
         fields = ['username', 'image']
 
-    def filter_username(self, queryset, name, value):
-        filtered_queryset = queryset.filter(user__username__contains=value)
+    def filter_image(self, queryset, name, value):
+        if value:
+            filtered_queryset = queryset.exclude(image_url__exact='')
+        else:
+            filtered_queryset = queryset.filter(image_url__exact='')
         return filtered_queryset
 
 
@@ -56,5 +59,5 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_class = ProfileFilter
-    permission_classes = (ProfilePermission,)
+    # permission_classes = (ProfilePermission,)
 
